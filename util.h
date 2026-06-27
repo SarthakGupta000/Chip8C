@@ -2,14 +2,13 @@
 #include <stdlib.h>
 #define STRING_VAR(variable) #variable // converts enum
 
-enum Instructions { // o signifies empty space to keep it in 3 bytes
-    MOV,
-    ADD,
-    SUB,
-    JMP,
+const int instNum = 4;
+char *instructionMap[instNum] = {
+    "MOV",
+    "ADD",
+    "SUB",
+    "JMP"
 };
-
-int instructionMap[4][3];
 
 struct CPU {
     uint8_t ram[4096];
@@ -21,14 +20,12 @@ struct CPU {
     // uint8_t carryFlag;
 };
 
-void mapInstructions();
-
-uint8_t fetch(char *reg); // like R0 R1 R2 R3 and also all 1 byte integers
+uint8_t fetch(char *reg, struct CPU *cpu); // like R0 R1 R2 R3 and also all 1 byte integers
 
 char **splitProgram(char *program);
 
 char **splitLine(char *line);
 
-uint8_t execute(char **line); // split line as input
+uint8_t execute(char **line, struct CPU *cpu); // split line as input
 
 void run(char *program);
