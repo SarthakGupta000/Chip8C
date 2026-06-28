@@ -38,3 +38,37 @@ uint8_t fetch(char *reg, struct CPU *cpu) {
     }
     return -1;
 }
+
+char **splitProgram(char *program, size_t len) { // program must end in \n
+    int numOfLines = 0;
+    for (int i = 0; i < len - 1; i++) {
+        if (program[i] == '\n') {
+            numOfLines++;
+        }
+    }
+    if (numOfLines == 0) {
+        return NULL;
+    }
+    char **split = (char **) malloc(sizeof(char *) * numOfLines);
+    for (int i = 0; i < numOfLines; i++) {
+        split[i] = (char *) malloc(sizeof(char) * 25);
+        for (int j = 0; j < 25; j++) {
+            split[i][j] = '~';
+        }
+        split[i][24] = '\0';
+    }
+    int splitPointer = 0;
+    int previous = -1; // drops back to next char which is *program
+    for (int current = 0; current < len; current++) {
+        if (program[current] == '\n') {
+            int currentChar = 0;
+            for (int buffer = (previous + 1); buffer < current; buffer++) {
+                split[splitPointer][currentChar] = program[buffer];
+                currentChar++;
+            }
+            splitPointer++;
+            previous = current;
+        }
+    }
+    return split;
+}

@@ -22,7 +22,7 @@ struct CPU {
 
 uint8_t fetch(char *reg, struct CPU *cpu); // like R0 R1 R2 R3 and also all 1 byte integers
 
-char **splitProgram(char *program);
+char **splitProgram(char *program, size_t len);
 
 char **splitLine(char *line);
 
