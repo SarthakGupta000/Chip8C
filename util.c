@@ -39,7 +39,7 @@ uint8_t fetch(char *reg, struct CPU *cpu) {
     return -1;
 }
 
-char **splitProgram(char *program, size_t len) { // program must end in \n
+char **splitProgram(char *program, size_t len) { // program must end in \n with \n between lines
     int numOfLines = 0;
     for (int i = 0; i < len - 1; i++) {
         if (program[i] == '\n') {
@@ -66,7 +66,7 @@ char **splitProgram(char *program, size_t len) { // program must end in \n
                 split[splitPointer][currentChar] = program[buffer];
                 currentChar++;
             }
-            split[splitPointer][(currentChar + 1)] = '\0';
+            split[splitPointer][currentChar] = '\0';
             splitPointer++;
             previous = current;
         }
@@ -101,6 +101,7 @@ char **splitLine(char *line, size_t len) { // line must end in space
                 split[splitPointer][currentChar] = line[buffer];
                 currentChar++;
             }
+            split[splitPointer][currentChar] = '\0';
             splitPointer++;
             previous = current;
         }
