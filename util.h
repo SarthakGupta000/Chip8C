@@ -24,7 +24,7 @@ uint8_t fetch(char *reg, struct CPU *cpu); // like R0 R1 R2 R3 and also all 1 by
 
 char **splitProgram(char *program, size_t len);
 
-char **splitLine(char *line);
+char **splitLine(char *line, size_t len);
 
 uint8_t execute(char **line, struct CPU *cpu); // split line as input
 

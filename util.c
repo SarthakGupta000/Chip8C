@@ -66,6 +66,41 @@ char **splitProgram(char *program, size_t len) { // program must end in \n
                 split[splitPointer][currentChar] = program[buffer];
                 currentChar++;
             }
+            split[splitPointer][(currentChar + 1)] = '\0';
+            splitPointer++;
+            previous = current;
+        }
+    }
+    return split;
+}
+
+char **splitLine(char *line, size_t len) { // line must end in space
+    int numOfWords = 0;
+    for (int i = 0; i < len - 1; i++) {
+        if (line[i] == ' ') {
+            numOfWords++;
+        }
+    }
+    if (numOfWords == 0) {
+        return NULL;
+    }
+    char **split = (char **) malloc(sizeof(char *) * numOfWords);
+    for (int i = 0; i < numOfWords; i++) {
+        split[i] = (char *) malloc(sizeof(char) * 25);
+        for (int j = 0; j < 10; j++) {
+            split[i][j] = '~';
+        }
+        split[i][(10 - 1)] = '\0';
+    }
+    int splitPointer = 0;
+    int previous = -1; // drops back to next char which is *program
+    for (int current = 0; current < len; current++) {
+        if (line[current] == ' ') {
+            int currentChar = 0;
+            for (int buffer = (previous + 1); buffer < current; buffer++) {
+                split[splitPointer][currentChar] = line[buffer];
+                currentChar++;
+            }
             splitPointer++;
             previous = current;
         }
