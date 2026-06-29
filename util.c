@@ -238,14 +238,9 @@ void run(char *program, size_t numOfLines) {
         cpu->programCounter++;
         printf("\n");
     }
-    free(lines);
     for (int i = 0; i < numOfLines; i++) {
-        int j = 0;
-        while (split[i][j] != NULL) { 
-            free(split[i][j]); // Free individual words
-            j++;
-        }
         free(split[i]);
     }
+    free(lines);
     free(cpu);
 }
