@@ -1,15 +1,8 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #define STRING_VAR(variable) #variable // converts enum
-
-const int instNum = 4;
-char *instructionMap[instNum] = {
-    "MOV",
-    "ADD",
-    "SUB",
-    "JMP"
-};
 
 struct CPU {
     uint8_t ram[4096];

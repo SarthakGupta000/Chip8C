@@ -1,5 +1,13 @@
 #include "util.h"
 
+const int instNum = 4;
+char *instructionMap[4] = {
+    "MOV",
+    "ADD",
+    "SUB",
+    "JMP"
+};
+
 uint8_t fetch(char *reg, struct CPU *cpu) {
     if (reg[0] == 'R') {
         if (reg[1] == '0') {
@@ -115,7 +123,7 @@ void execute(char **line, struct CPU *cpu, size_t numOfLines) {
     for (int i = 0; i < instNum; i++) {
         val = 0;
         for (int j = 0; j < 3; j++) {
-            if (instructionMap[i][j] = line[0][j]) {
+            if (instructionMap[i][j] == line[0][j]) {
                 val++;
             }
         }
@@ -127,7 +135,7 @@ void execute(char **line, struct CPU *cpu, size_t numOfLines) {
         return;
     }
     // MOV
-    if (strcmp(instructionMap[inst], "MOV")) {
+    if (strcmp(instructionMap[inst], "MOV") == 0) {
         if (line[1][0] != 'R') {
             return;
         }
@@ -147,10 +155,10 @@ void execute(char **line, struct CPU *cpu, size_t numOfLines) {
         else {
             return;
         }
-        cpu->registers[0] = fetch(line[2], cpu);
+        cpu->registers[reg] = fetch(line[2], cpu);
     }
     // ADD
-    if (strcmp(instructionMap[inst], "ADD")) {
+    if (strcmp(instructionMap[inst], "ADD") == 0) {
         if (line[1][0] != 'R') {
             return;
         }
@@ -173,7 +181,7 @@ void execute(char **line, struct CPU *cpu, size_t numOfLines) {
         cpu->registers[0] += fetch(line[2], cpu);
     }
     // SUB
-    if (strcmp(instructionMap[inst], "SUB")) {
+    if (strcmp(instructionMap[inst], "SUB") == 0) {
         if (line[1][0] != 'R') {
             return;
         }
@@ -196,7 +204,7 @@ void execute(char **line, struct CPU *cpu, size_t numOfLines) {
         cpu->registers[0] -= fetch(line[2], cpu);
     }
     // JMP
-    if (strcmp(instructionMap[inst], "JMP")) {
+    if (strcmp(instructionMap[inst], "JMP") == 0) {
         if (fetch(line[1], cpu) >= numOfLines) {
             return;
         }
@@ -219,8 +227,16 @@ void run(char *program, size_t numOfLines) {
         split[i] = splitLine(lines[i], (strlen(lines[i]) + 1));
     }
     while (cpu->programCounter < numOfLines) {
+        if (strcmp("HLT", split[cpu->programCounter][0]) == 0) {
+            return;
+        }
         execute(split[cpu->programCounter], cpu, numOfLines);
+        for (int i = 0; i < 4; i++) {
+            printf("%d ", cpu->registers[i]);
+        }
+        printf("%d", cpu->programCounter);
         cpu->programCounter++;
+        printf("\n");
     }
     free(lines);
     for (int i = 0; i < numOfLines; i++) {
