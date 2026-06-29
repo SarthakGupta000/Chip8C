@@ -108,3 +108,123 @@ char **splitLine(char *line, size_t len) { // line must end in space
     }
     return split;
 }
+
+void execute(char **line, struct CPU *cpu, size_t numOfLines) {
+    int val;
+    int inst = -1;
+    for (int i = 0; i < instNum; i++) {
+        val = 0;
+        for (int j = 0; j < 3; j++) {
+            if (instructionMap[i][j] = line[0][j]) {
+                val++;
+            }
+        }
+        if (val == 3) {
+            inst = i;
+        }
+    }
+    if (inst == -1) {
+        return;
+    }
+    // MOV
+    if (strcmp(instructionMap[inst], "MOV")) {
+        if (line[1][0] != 'R') {
+            return;
+        }
+        int reg;
+        if (line[1][1] == '0') {
+            reg = 0;
+        }
+        else if (line[1][1] == '1') {
+            reg = 1;
+        }
+        else if (line[1][1] == '2') {
+            reg = 2;
+        }
+        else if (line[1][1] == '3') {
+            reg = 3;
+        }
+        else {
+            return;
+        }
+        cpu->registers[0] = fetch(line[2], cpu);
+    }
+    // ADD
+    if (strcmp(instructionMap[inst], "ADD")) {
+        if (line[1][0] != 'R') {
+            return;
+        }
+        int reg;
+        if (line[1][1] == '0') {
+            reg = 0;
+        }
+        else if (line[1][1] == '1') {
+            reg = 1;
+        }
+        else if (line[1][1] == '2') {
+            reg = 2;
+        }
+        else if (line[1][1] == '3') {
+            reg = 3;
+        }
+        else {
+            return;
+        }
+        cpu->registers[0] += fetch(line[2], cpu);
+    }
+    // SUB
+    if (strcmp(instructionMap[inst], "SUB")) {
+        if (line[1][0] != 'R') {
+            return;
+        }
+        int reg;
+        if (line[1][1] == '0') {
+            reg = 0;
+        }
+        else if (line[1][1] == '1') {
+            reg = 1;
+        }
+        else if (line[1][1] == '2') {
+            reg = 2;
+        }
+        else if (line[1][1] == '3') {
+            reg = 3;
+        }
+        else {
+            return;
+        }
+        cpu->registers[0] -= fetch(line[2], cpu);
+    }
+    // JMP
+    if (strcmp(instructionMap[inst], "JMP")) {
+        if (fetch(line[1], cpu) >= numOfLines) {
+            return;
+        }
+        cpu->programCounter = fetch(line[1], cpu);
+    }
+}
+
+void run(char *program, size_t numOfLines) {
+    struct CPU *cpu = (struct CPU *) malloc(sizeof(struct CPU));
+    cpu->programCounter = 0;
+    for (int i = 0; i < 4; i++) {
+        cpu->registers[i] = 0;
+    }
+    for (int i = 0; i < 4096; i++) {
+        cpu->ram[i] = 0; // not in use yet
+    }
+    char **lines = splitProgram(program, (strlen(program) + 1));
+    char ***split = (char ***) malloc(numOfLines * sizeof(char **));
+    for (int i = 0; i < numOfLines; i++) {
+        split[i] = splitLine(lines[i], (strlen(lines[i]) + 1));
+    }
+    while (cpu->programCounter < numOfLines) {
+        execute(split[cpu->programCounter], cpu, numOfLines);
+        cpu->programCounter++;
+    }
+    free(lines);
+    for (int i = 0; i < numOfLines; i++) {
+        free(split[i]);
+    }
+    free(cpu);
+}

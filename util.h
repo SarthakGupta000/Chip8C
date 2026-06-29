@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <string.h>
 #include <stdlib.h>
 #define STRING_VAR(variable) #variable // converts enum
 
@@ -15,7 +16,7 @@ struct CPU {
     uint8_t registers[4];
     uint8_t programCounter;
     // uint8_t stackPointer;
-    // uint8_t stck[16];
+    // uint8_t stack[16];
     // uint8_t zeroFlag;
     // uint8_t carryFlag;
 };
@@ -26,6 +27,6 @@ char **splitProgram(char *program, size_t len);
 
 char **splitLine(char *line, size_t len);
 
-uint8_t execute(char **line, struct CPU *cpu); // split line as input
+void execute(char **line, struct CPU *cpu, size_t numOfLines); // split line as input
 
-void run(char *program);
+void run(char *program, size_t numOfLines);
