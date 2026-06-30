@@ -178,7 +178,7 @@ void execute(char **line, struct CPU *cpu, size_t numOfLines) {
         else {
             return;
         }
-        cpu->registers[0] += fetch(line[2], cpu);
+        cpu->registers[reg] += fetch(line[2], cpu);
     }
     // SUB
     if (strcmp(instructionMap[inst], "SUB") == 0) {
@@ -201,7 +201,7 @@ void execute(char **line, struct CPU *cpu, size_t numOfLines) {
         else {
             return;
         }
-        cpu->registers[0] -= fetch(line[2], cpu);
+        cpu->registers[reg] -= fetch(line[2], cpu);
     }
     // JMP
     if (strcmp(instructionMap[inst], "JMP") == 0) {
@@ -228,7 +228,7 @@ void run(char *program, size_t numOfLines) {
     }
     while (cpu->programCounter < numOfLines) {
         if (strcmp("HLT", split[cpu->programCounter][0]) == 0) {
-            return;
+            goto out;
         }
         execute(split[cpu->programCounter], cpu, numOfLines);
         for (int i = 0; i < 4; i++) {
@@ -238,9 +238,31 @@ void run(char *program, size_t numOfLines) {
         cpu->programCounter++;
         printf("\n");
     }
+    out:;
     for (int i = 0; i < numOfLines; i++) {
+        int len;
+        if (strcmp(split[i][0], "MOV") == 0) {
+            len = 3;
+        } else if (strcmp(split[i][0], "ADD") == 0) {
+            len = 3;
+        } else if (strcmp(split[i][0], "SUB") == 0) {
+            len = 3;
+        } else if (strcmp(split[i][0], "JMP") == 0) {
+            len = 2;
+        } else if (strcmp(split[i][0], "HLT") == 0) {
+            len = 1;
+        } else {
+            return;
+        }
+        for (int j = 0; j < len; j++) {
+            free(split[i][j]);
+        }
         free(split[i]);
     }
+    for (int i = 0 ; i < numOfLines; i++) {
+        free(lines[i]);
+    }
+    free(split);
     free(lines);
     free(cpu);
 }
